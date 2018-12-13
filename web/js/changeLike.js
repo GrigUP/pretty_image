@@ -25,7 +25,7 @@ function getInfoAboutImage(value) {
 function changeTotalLike(value) {
     $.ajax({
         type: 'POST',
-        url:  '/pretty_image-0.1/image/like',
+        url:  '/image/like',
         data: {'imageId':value.imageId},
         success: function (data) {
             console.log(data);

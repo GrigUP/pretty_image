@@ -3,7 +3,8 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>admin</title>
+    <title>User page</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -50,6 +51,22 @@
 
 <div>
     <div>
+        <h3>Загрузить изображение</h3>
+    </div>
+
+    <div>
+        <form action="${pageContext.request.contextPath}/image/upload" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" accept="image/*"><br>
+            <label>Теги: </label>
+            <input type="text" name="tags">
+            <input type="submit">
+        </form>
+    </div>
+</div>
+
+<hr>
+<div>
+    <div>
         <h3>Изображения</h3>
     </div>
 
@@ -71,7 +88,11 @@
                     </div>
                 </c:if>
                 <div>
-                    <label>Лайков: </label>${image.likes}
+                    <label class="likes">
+                        Лайков:
+                        <input type="hidden" value="${image.id}">
+                        <span>${image.likes}</span>
+                    </label>
                 </div>
 
                 <div>
@@ -86,6 +107,6 @@
         </c:forEach>
     </div>
 </div>
-
+<script  src="${pageContext.request.contextPath}/js/changeLike.js"></script>
 </body>
 </html>

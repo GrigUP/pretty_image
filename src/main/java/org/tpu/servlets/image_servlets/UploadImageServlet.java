@@ -37,7 +37,7 @@ public class UploadImageServlet extends HttpServlet {
         }
 
         String accountName = sessionAccount.getFname() + " " + sessionAccount.getLname();
-        String imageRoot =  "/Users/ilyagrigorisin/Desktop/tomcat/upload/";
+        String imageRoot =  "C:/Users/я/Documents/pretty_image/out/upload/";
         String imageWebRoot = "/upload/";
 
         List<FileItem> items = getFileItemListFromRequest(req, resp);

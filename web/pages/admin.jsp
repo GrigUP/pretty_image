@@ -153,7 +153,7 @@
     </div>
 </div>
 
-<script  src="${pageContext.request.contextPath}/js/admin.js"></script>
+<script  src="${pageContext.request.contextPath}/js/changeLike.js"></script>
 
 </body>
 </html>
