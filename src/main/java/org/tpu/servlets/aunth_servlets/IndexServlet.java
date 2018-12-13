@@ -14,7 +14,6 @@ import java.io.IOException;
 public class IndexServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
         Account sessionAccount = (Account) req.getSession().getAttribute("account");
         if (sessionAccount != null) {
             switch (sessionAccount.getAccountType()) {

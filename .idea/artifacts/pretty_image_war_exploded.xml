@@ -18,6 +18,7 @@
         <element id="file-copy" path="$PROJECT_DIR$/target/pretty_image-0.1/META-INF/MANIFEST.MF" />
       </element>
       <element id="javaee-facet-resources" facet="pretty_image/web/Web" />
+      <element id="module-source" name="pretty_image" />
     </root>
   </artifact>
 </component>
