@@ -115,7 +115,7 @@
             <form action="/image/delete" method="post">
                 <div>
                     <div>
-                        <img src="${image.webPath}" alt="null">
+                        <img src="${image.webPath}" width="35%" alt="null">
                     </div>
 
                     <div>
