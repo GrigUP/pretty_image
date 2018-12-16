@@ -13,11 +13,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
 @WebServlet(name = "IndexServlet", urlPatterns = "")
 public class IndexServlet extends HttpServlet {
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -46,6 +48,13 @@ public class IndexServlet extends HttpServlet {
             resp.setContentType("text/html");
             RequestDispatcher requestDispatcher = req.getRequestDispatcher("pages/index.jsp");
             if (requestDispatcher != null) requestDispatcher.forward(req, resp);
+
+            resetErrorMessage(req.getSession());
         }
+    }
+
+    private void resetErrorMessage(HttpSession session) {
+        session.setAttribute("accountError", null);
+        session.setAttribute("loginError", null);
     }
 }

@@ -4,6 +4,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.tpu.database.dao.ImageAccountLikesDAO;
 import org.tpu.database.dao.ImageDAO;
 import org.tpu.database.interfaces.DBFactory;
+import org.tpu.database.models.Account;
 import org.tpu.database.models.Image;
 
 import java.io.File;
@@ -38,6 +39,23 @@ public class ImageService {
     public List<Image> readAll() {
         ImageDAO imageDAO = new ImageDAO(factory.connect());
         List<Image> imageList = imageDAO.readAllImage();
+        factory.close();
+        return imageList;
+    }
+
+    public List<Image> readAll(Account account) {
+        ImageDAO imageDAO = new ImageDAO(factory.connect());
+        List<Image> imageList = imageDAO.readAllImage();
+
+        if (account != null) {
+            String accountName = account.getFname() + " " + account.getLname();
+            for (Image img:imageList) {
+                if (img.getAccountName().equals(accountName)) {
+                    img.setDeleteFlag(true);
+                }
+            }
+        }
+
         factory.close();
         return imageList;
     }

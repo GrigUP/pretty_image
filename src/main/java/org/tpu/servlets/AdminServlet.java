@@ -22,7 +22,9 @@ import java.util.List;
 public class AdminServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if ((Account) req.getSession().getAttribute("account") == null) {
+        Account account = (Account) req.getSession().getAttribute("account");
+
+        if (account == null) {
             System.out.println("null");
             resp.sendRedirect(req.getContextPath() + "/");
             return;
@@ -36,7 +38,7 @@ public class AdminServlet extends HttpServlet {
 
         AccountsDAO accountsDAO = new AccountsDAO(bd.connect());
         List<Account> accountList = accountsDAO.readAllAccount();
-        List<Image> imageList = imageService.readAll();
+        List<Image> imageList = imageService.readAll(account);
         bd.close();
 
         req.setAttribute("accountList", accountList);

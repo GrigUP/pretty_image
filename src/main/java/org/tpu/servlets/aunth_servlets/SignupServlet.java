@@ -6,6 +6,7 @@ import org.tpu.database.interfaces.DBFactory;
 import org.tpu.database.models.Account;
 import org.tpu.database.models.AccountType;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,6 +17,7 @@ import java.io.IOException;
 @WebServlet(name = "SignupServlet", urlPatterns = "/signup")
 public class SignupServlet extends HttpServlet {
 
+    private final String errorMessage = "Аккаунт существует";
     private final AccountType defaultType = AccountType.user;
 
     @Override
@@ -33,27 +35,28 @@ public class SignupServlet extends HttpServlet {
         DBFactory db = new MysqlDBFactory();
         AccountsDAO dao = new AccountsDAO(db.connect());
 
-        Account account = dao.readAccount(req.getParameter("email"));
+        Account account = dao.readAccount(req.getParameter("email").toLowerCase());
         if (account == null) {
             account = new Account();
             account.setFname(req.getParameter("fname"));
             account.setLname(req.getParameter("lname"));
-            account.setEmail(req.getParameter("email"));
+            account.setEmail(req.getParameter("email").toLowerCase());
             account.setPassword(req.getParameter("password"));
             account.setAccountType(defaultType);
 
             dao.createAccount(account);
 
-            account = dao.readAccount(req.getParameter("email"));
+            account = dao.readAccount(req.getParameter("email").toLowerCase());
             db.close();
         } else {
-            resp.sendRedirect(req.getContextPath() + "/");
-            return;
+            req.getSession().setAttribute("accountError", errorMessage);
+            account = null;
         }
 
         if (account != null) {
             req.getSession().setAttribute("account", account);
-            resp.sendRedirect(req.getContextPath() + "/");
         }
+
+        resp.sendRedirect(req.getContextPath() + "/");
     }
 }

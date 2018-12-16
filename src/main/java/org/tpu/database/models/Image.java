@@ -8,6 +8,17 @@ public class Image {
     private String date;
     private int likes;
     private String accountName;
+    private boolean deleteFlag;
+
+    public boolean isDeleteFlag() {
+        return deleteFlag;
+    }
+
+    public void setDeleteFlag(boolean deleteFlag) {
+        this.deleteFlag = deleteFlag;
+    }
+
+
 
     public int getId() {
         return id;

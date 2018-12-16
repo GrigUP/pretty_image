@@ -20,14 +20,16 @@ import java.util.List;
 public class UserServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if ((Account) req.getSession().getAttribute("account") == null) {
+        Account account = (Account) req.getSession().getAttribute("account");
+
+        if (account == null) {
             resp.sendRedirect(req.getContextPath() + "/");
             return;
         }
 
         DBFactory bd = new MysqlDBFactory();
         ImageService imageService = new ImageService(bd);
-        List<Image> imageList = imageService.readAll();
+        List<Image> imageList = imageService.readAll(account);
         bd.close();
 
         req.setAttribute("imagesList", imageList);

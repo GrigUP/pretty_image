@@ -5,6 +5,7 @@ import org.tpu.database.implementations.MysqlDBFactory;
 import org.tpu.database.interfaces.DBFactory;
 import org.tpu.database.models.Account;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,6 +15,8 @@ import java.io.IOException;
 
 @WebServlet(name = "LoginServlet", urlPatterns = "/login")
 public class LoginServlet extends HttpServlet {
+
+    private final String errorMessage = "Неверный логин или пароль";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -28,7 +31,7 @@ public class LoginServlet extends HttpServlet {
 
         DBFactory db = new MysqlDBFactory();
         AccountsDAO dao = new AccountsDAO(db.connect());
-        Account account = dao.readAccount(login);
+        Account account = dao.readAccount(login.toLowerCase());
         db.close();
 
         if (account != null) {
@@ -36,8 +39,12 @@ public class LoginServlet extends HttpServlet {
                 account = null;
             } else {
                 req.getSession().setAttribute("account", account);
+                resp.sendRedirect(req.getContextPath() + "/");
+                return;
             }
         }
+
+        req.getSession().setAttribute("loginError", errorMessage);
         resp.sendRedirect(req.getContextPath() + "/");
     }
 }

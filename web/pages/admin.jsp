@@ -3,82 +3,62 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>admin</title>
+    <title>Admin page</title>
     <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <!--<link href="C:\Users\я\Documents\pretty_image\web\css\style.css" rel="stylesheet" type="text/css">-->
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Titillium+Web:400,300,600' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+    <script src="/js/inputFile.js" ></script>
 </head>
-<body>
-
-<div>
-    <div>
-        <h3>Данные пользователя</h3>
-    </div>
-
-    <div>
-        <table border="2pt">
-            <tr>
-                <td>Имя</td>
-                <td>${sessionScope.get("account").fname}</td>
-            </tr>
-            <tr>
-                <td>Фамилия</td>
-                <td>${sessionScope.get("account").lname}</td>
-            </tr>
-            <tr>
-                <td>Email</td>
-                <td>${sessionScope.get("account").email}</td>
-            </tr>
-            <tr>
-                <td>Пароль</td>
-                <td>${sessionScope.get("account").password}</td>
-            </tr>
-            <tr>
-                <td>Тип</td>
-                <td>${sessionScope.get("account").accountType}</td>
-            </tr>
-        </table>
-    </div>
-
-    <div>
-        <form action="${pageContext.request.contextPath}/logout" method="post">
-            <br>
-            <input type="submit" value="Выйти">
-        </form>
-    </div>
-
-</div>
-
-<hr>
-
-<div>
-    <div>
-        <h3>Загрузить изображение</h3>
-    </div>
-
-    <div>
+<body style="height: 10px; background: linear-gradient(45deg, #EECFBA, #C5DDE8);">
+<%@include file="navbar.html"%>
+<div class="container" align="center">
+    <div class="col col-md-6" align="center">
+        <!-- <div align="center" style="margin-bottom: 20px; margin-top: 10px"> -->
+        <h3 style="margin-top: 10px">Загрузить изображениe</h3>
         <form action="${pageContext.request.contextPath}/image/upload" method="post" enctype="multipart/form-data">
-            <input type="file" name="file" accept="image/*"><br>
-            <label>Теги: </label>
-            <input type="text" name="tags">
-            <input type="submit">
+            <div class="form-group">
+                <div class="input-group input-file">
+                    <input type="text" class="form-control" placeholder='Choose a file...' />
+                    <span class="input-group-btn">
+        		        <button class="btn btn-default btn-choose" type="button">Choose</button>
+                    </span>
+                </div>
+            </div>
+            <input placeholder="Enter some tags" style="width: 525px; margin-bottom: 15px" class="form-control" id="tags" type="text" name="tags">
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary pull-right">Submit</button>
+                <button type="reset" class="btn btn-danger">Reset</button>
+            </div>
+
         </form>
     </div>
 </div>
-
 <hr>
-
-<div>
-    <details>
-        <summary>Пользователи</summary>
-
-        <table border="2pt">
-            <tr>
-                <td>ID</td>
-                <td>Имя</td>
-                <td>Фамилия</td>
-                <td>Email</td>
-                <td>Пароль</td>
-                <td>Тип</td>
+<div >
+    <div align="center" style="margin-bottom: 20px">
+        <h3>Зарегестрированные пользователи</h3>
+    </div>
+    <table class="table table-light table-bordered table-hover">
+        <thead class="table-info">
+            <tr >
+                <th>ID</th>
+                <th>Имя</th>
+                <th>Фамилия</th>
+                <th>Email</th>
+                <th>Пароль</th>
+                <th>Тип</th>
             </tr>
+        </thead>
+        <tbody>
             <c:forEach items="${accountList}" var="account">
                 <tr>
                     <td>${account.id}</td>
@@ -89,67 +69,58 @@
                     <td>${account.accountType}</td>
                 </tr>
             </c:forEach>
-        </table>
-
+        </tbody>
+    </table>
+    <div align="center">
         <form action="${pageContext.request.contextPath}/accounts/delete" method="post">
-            <label>Удалить профиль с ID: </label>
-            <select name="idForDelete">
+            <label for="selectid">Удалить профиль с ID: </label>
+            <select id="selectid" class="form-control" style="width: 80px; margin-bottom: 10px" name="idForDelete">
                 <c:forEach items="${accountList}" var="account">
-                    <option>${account.id}</option>
+                    <c:if test="${account.fname ne sessionScope.get('account').fname
+                              and account.lname ne sessionScope.get('account').lname}">
+                        <option>${account.id}</option>
+                    </c:if>
+
                 </c:forEach>
             </select>
-            <input type="submit" value="удалить">
+            <input type="submit" class="btn btn-primary" value="Delete user">
         </form>
-    </details>
+    </div>
 </div>
-
 <hr>
-
 <div>
-    <div>
+    <div align="center" style="margin-bottom: 20px">
         <h3>Изображения</h3>
     </div>
-
-    <div>
-        <c:forEach items="${imagesList}" var="image">
-            <form action="/image/delete" method="post">
-                <div>
-                    <div>
-                        <img src="${image.webPath}" width="35%" alt="null">
-                    </div>
-
-                    <div>
-                        <label>ID: </label>${image.id}
-                    </div>
-
-                    <c:if test="${image.tags != ''}">
-                        <div>
-                            <label>Тэги: </label>${image.tags}
-                        </div>
-                    </c:if>
-                    <div >
-                        <label class="likes">
-                            Лайков:
-                            <input type="hidden" value="${image.id}">
-                            <span>${image.likes}</span>
-                        </label>
-                    </div>
-
-                    <div>
-                        <label>Дата создания: </label>${image.date}
-                    </div>
-
-                    <div>
-                        <label>Добавил пользователь: </label>${image.accountName}
-                    </div>
-
-                    <div>
-                        <button type="submit" value="${image.id}" name="imageForDeleteId">Удалить</button>
+    <div class="container">
+        <div class="card-columns">
+            <c:forEach items="${imagesList}" var="image">
+                <div class="card bg-light">
+                    <img class="card-img-top" src="${image.webPath}" alt="null">
+                    <div class="card-body">
+                        <ul class="list-group">
+                            <c:if test="${image.tags != ''}">
+                                <li class="list-group-item">Тeги: ${image.tags}</li>
+                            </c:if>
+                            <li class="list-group-item">
+                                <label class="likes">
+                                    Лайков:
+                                    <input type="hidden" value="${image.id}">
+                                    <span>${image.likes}</span>
+                                </label>
+                            </li>
+                            <li class="list-group-item">Дата создания: ${image.date}</li>
+                            <li class="list-group-item">Добавил пользователь: ${image.accountName}</li>
+                        </ul>
+                        <c:if test="${image.deleteFlag == 'true' or sessionScope.get('account').accountType == 'administration'}">
+                            <form action="/image/delete" method="post">
+                                <button class="btn" type="submit" value="${image.id}" name="imageForDeleteId">Delete</button>
+                            </form>
+                        </c:if>
                     </div>
                 </div>
-            </form>
-            <hr>
-        </c:forEach>
+            </c:forEach>
+        </div>
     </div>
 </div>
 
