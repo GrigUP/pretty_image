@@ -14,6 +14,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.List;
@@ -44,6 +45,10 @@ public class AdminServlet extends HttpServlet {
         req.setAttribute("accountList", accountList);
         req.setAttribute("imagesList", imageList);
         if(requestDispatcher != null) requestDispatcher.forward(req, resp);
+        resetErrorMessage(req.getSession());
     }
 
+    private void resetErrorMessage(HttpSession session) {
+        session.setAttribute("uploadErrorMsg", null);
+    }
 }

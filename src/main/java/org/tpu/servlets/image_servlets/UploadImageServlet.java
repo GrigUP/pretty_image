@@ -31,6 +31,8 @@ public class UploadImageServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String errorMsgWhenUpload = null;
+
         Account sessionAccount = (Account) req.getSession().getAttribute("account");
         if (sessionAccount == null) {
             resp.sendRedirect(req.getContextPath() + "/");
@@ -45,8 +47,15 @@ public class UploadImageServlet extends HttpServlet {
 
         DBFactory dbFactory = new MysqlDBFactory();
         ImageService imageService = new ImageService(dbFactory);
-
-        Image image = imageService.createOnFileSystem(meta);
+        Image image = null;
+        try {
+            image = imageService.createOnFileSystem(meta);
+        } catch (Exception e) {
+            errorMsgWhenUpload = e.getMessage();
+            req.getSession().setAttribute("uploadErrorMsg", errorMsgWhenUpload);
+            resp.sendRedirect(req.getContextPath() + "/");
+            return;
+        }
         image.setAccountName(accountName);
         System.out.println(image);
         imageService.createOnDB(image);

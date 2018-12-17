@@ -18,11 +18,11 @@
   <link href='https://fonts.googleapis.com/css?family=Titillium+Web:400,300,600' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
 </head>
-<body style="height: 10px; background: linear-gradient(45deg, #EECFBA, #C5DDE8);">
+<body style="height: 10px; background: linear-gradient(45deg, #ccc4ee, #C5DDE8);">
 <%@include file="navbar.html"%>
   <main class="container" style="margin-top: 10px">
     <div class="row">
-      <div class="col-4">
+      <div class="col-3">
         <div class="form-group" align="center">
           <h3 style="margin-top: 20px;">Sign Up</h3>
             <form action="${pageContext.request.contextPath}/signup" method="post">
@@ -54,7 +54,7 @@
             </form>
         </div>
       </div>
-      <div class="col-8">
+      <div class="col-9">
         <div class="card-columns">
           <c:forEach items="${imagesList}" var="image">
             <div class="card bg-light">
@@ -74,11 +74,6 @@
                   <li class="list-group-item">Дата создания: ${image.date}</li>
                   <li class="list-group-item">Добавил пользователь: ${image.accountName}</li>
                 </ul>
-                <c:if test="${image.deleteFlag == 'true' or sessionScope.get('account').accountType == 'administration'}">
-                  <form action="/image/delete" method="post">
-                    <button class="btn" type="submit" value="${image.id}" name="imageForDeleteId">Delete</button>
-                  </form>
-                </c:if>
               </div>
             </div>
           </c:forEach>

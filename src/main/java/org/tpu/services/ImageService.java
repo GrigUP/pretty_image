@@ -8,12 +8,14 @@ import org.tpu.database.models.Account;
 import org.tpu.database.models.Image;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Random;
 
 public class ImageService {
     private DBFactory factory;
     private Random random;
+    private final int maxImageSize = 2 * 1024 * 1024;
 
     public ImageService(DBFactory factory) {
         this.factory = factory;
@@ -74,7 +76,7 @@ public class ImageService {
         factory.close();
     }
 
-    public Image createOnFileSystem(Object meta) {
+    public Image createOnFileSystem(Object meta) throws Exception {
         ImageMeta imageMeta = null;
         if (meta instanceof ImageMeta)
             imageMeta = (ImageMeta) meta;
@@ -94,10 +96,8 @@ public class ImageService {
             image.setWebPath(imageWebRoot + getFileNameByPath(image.getLocalPath()));
             return image;
         } catch (Exception ex) {
-            ex.printStackTrace();
+            throw ex;
         }
-
-        return null;
     }
 
     private void deleteFromFileSystem(Image image) {
@@ -126,6 +126,12 @@ public class ImageService {
         for (FileItem fileItem: items) {
             switch (fileItem.getFieldName()) {
                 case("file"):
+                    if (fileItem.getSize() == 0) {
+                        throw new Exception("Empty file");
+                    }
+                    if (fileItem.getSize() > maxImageSize) {
+                        throw new Exception("Max size is over limit");
+                    }
                     String path = processUploadedFile(imageRoot, fileItem);
                     if (path == null) {
                         return null;
@@ -133,7 +139,7 @@ public class ImageService {
                     resultImage.setLocalPath(path);
                     break;
                 case("tags"):
-                    resultImage.setTags(fileItem.getString());
+                    resultImage.setTags(new String(fileItem.getString().getBytes(StandardCharsets.ISO_8859_1), "UTF-8"));
                     break;
             }
         }

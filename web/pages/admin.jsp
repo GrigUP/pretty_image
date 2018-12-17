@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
     <script src="/js/inputFile.js" ></script>
 </head>
-<body style="height: 10px; background: linear-gradient(45deg, #EECFBA, #C5DDE8);">
+<body style="height: 10px; background: linear-gradient(45deg, #ddc8ee, #C5DDE8);">
 <%@include file="navbar.html"%>
 <div class="container" align="center">
     <div class="col col-md-6" align="center">
@@ -38,8 +38,12 @@
                 <button type="submit" class="btn btn-primary pull-right">Submit</button>
                 <button type="reset" class="btn btn-danger">Reset</button>
             </div>
-
         </form>
+        <c:if test="${sessionScope.get('uploadErrorMsg') != null}">
+            <div class="alert alert-danger" role="alert">
+                    ${sessionScope.get('uploadErrorMsg')}
+            </div>
+        </c:if>
     </div>
 </div>
 <hr>
@@ -112,11 +116,27 @@
                             <li class="list-group-item">Дата создания: ${image.date}</li>
                             <li class="list-group-item">Добавил пользователь: ${image.accountName}</li>
                         </ul>
-                        <c:if test="${image.deleteFlag == 'true' or sessionScope.get('account').accountType == 'administration'}">
-                            <form action="/image/delete" method="post">
-                                <button class="btn" type="submit" value="${image.id}" name="imageForDeleteId">Delete</button>
-                            </form>
-                        </c:if>
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#img${image.id}">View</button>
+                            <c:if test="${image.deleteFlag == 'true' or sessionScope.get('account').accountType == 'administration'}">
+                                <form style="height: 75%;" action="/image/delete" method="post">
+                                    <button class="btn btn-danger" type="submit" value="${image.id}" name="imageForDeleteId">Delete</button>
+                                </form>
+                            </c:if>
+                            <div aria-hidden="true" class="modal fade" id="img${image.id}" role="dialog" tabindex="-1">
+                                <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-body mb-0 p-0" align="center">
+                                            <img src="${image.webPath}" alt="null" style="max-height: 530px; max-width: 100%;">
+                                        </div>
+                                        <div class="modal-footer">
+                                            <div><a href="${image.webPath}" target="_blank">Download</a></div>
+                                            <button class="btn btn-outline-primary btn-rounded btn-md ml-4 text-center" data-dismiss="modal" type="button">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </c:forEach>

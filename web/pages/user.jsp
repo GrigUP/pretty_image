@@ -3,6 +3,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta charset="utf-8">
     <title>User page</title>
     <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
@@ -19,7 +20,7 @@
     <script src="/js/inputFile.js" ></script>
     <%--<link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">--%>
 </head>
-<body style="height: 10px; background: linear-gradient(45deg, #EECFBA, #C5DDE8);">
+<body style="height: 10px; background: linear-gradient(45deg, #ddc8ee, #C5DDE8);">
 <%@include file="navbar.html"%>
 <div class="container" align="center">
     <div class="col col-md-6" align="center">
@@ -40,6 +41,11 @@
                 <button type="reset" class="btn btn-danger">Reset</button>
             </div>
         </form>
+        <c:if test="${sessionScope.get('uploadErrorMsg') != null}">
+            <div class="alert alert-danger" role="alert">
+                    ${sessionScope.get('uploadErrorMsg')}
+            </div>
+        </c:if>
     </div>
 </div>
 <hr>
@@ -58,46 +64,85 @@
                                 <li class="list-group-item">Тeги: ${image.tags}</li>
                             </c:if>
                             <li class="list-group-item">
-                                <label class="likes">
-                                    Лайков:
-                                    <input type="hidden" value="${image.id}">
-                                    <span>${image.likes}</span>
-                                </label>
+                                Лайков: <span id="like-id-${image.id}">${image.likes}</span>
                             </li>
                             <li class="list-group-item">Дата создания: ${image.date}</li>
                             <li class="list-group-item">Добавил пользователь: ${image.accountName}</li>
                         </ul>
-                        <c:if test="${image.deleteFlag == 'true' or sessionScope.get('account').accountType == 'administration'}">
-                            <form action="/image/delete" method="post">
-                                <button class="btn" type="submit" value="${image.id}" name="imageForDeleteId">Delete</button>
-                            </form>
-                        </c:if>
-                        <!--
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                            Посмотреть
-                        </button>
-                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <img src="${image.webPath}" alt="null">
+                        <div class="btn-group parent" role="group" aria-label="Basic example">
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#img${image.id}">View</button>
+
+                            <button onclick="changeLike(this)" class="btn btn-success">
+                                <input type="hidden" value="${image.id}">
+                                Like
+                            </button>
+
+                            <c:if test="${image.deleteFlag == 'true' or sessionScope.get('account').accountType == 'administration'}">
+                                <form style="height: 75%;" action="/image/delete" method="post">
+                                    <button class="btn btn-danger" type="submit" value="${image.id}" name="imageForDeleteId">Delete</button>
+                                </form>
+                            </c:if>
+                            <div aria-hidden="true" class="modal fade" id="img${image.id}" role="dialog" tabindex="-1">
+                                <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-body mb-0 p-0" align="center">
+                                            <img src="${image.webPath}" alt="null" style="max-height: 530px; max-width: 100%;">
+                                        </div>
+                                        <div class="modal-footer">
+                                            <div><a href="${image.webPath}" target="_blank">Download</a></div>
+                                            <button class="btn btn-outline-primary btn-rounded btn-md ml-4 text-center" data-dismiss="modal" type="button">Close</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                         -->
                     </div>
                 </div>
             </c:forEach>
         </div>
     </div>
 </div>
-<script  src="${pageContext.request.contextPath}/js/changeLike.js"></script>
+<script>
+
+    function changeLike(value) {
+        var value = getInfoAboutImage(value);
+        changeTotalLike(value);
+    }
+
+    function getInfoAboutImage(value) {
+        var child = value.children;
+
+        var result = {};
+
+        for (var i = 0; i < child.length; i++) {
+            var obj = child[i];
+
+            if (obj.tagName === 'INPUT') {
+                result.imageId = obj.value;
+            }
+        }
+
+        var spanId = document.getElementById('like-id-' + result.imageId);
+        result.spanTag = spanId;
+        return result;
+    }
+
+    function changeTotalLike(value) {
+        $.ajax({
+            type: 'POST',
+            url:  '/image/like',
+            data: {'imageId':value.imageId},
+            success: function (data) {
+                console.log(data);
+                var likes = Number(value.spanTag.innerHTML);
+                if (data === "added") {
+                    value.spanTag.innerHTML = likes + 1;
+                } else if (data === "deleted") {
+                    value.spanTag.innerHTML = likes - 1;
+                }
+            }
+        })
+    }
+</script>
 </body>
 </html>

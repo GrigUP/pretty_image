@@ -56,5 +56,6 @@ public class IndexServlet extends HttpServlet {
     private void resetErrorMessage(HttpSession session) {
         session.setAttribute("accountError", null);
         session.setAttribute("loginError", null);
+        session.setAttribute("uploadErrorMsg", null);
     }
 }
