@@ -22,6 +22,14 @@ public class ImageService {
         random = new Random();
     }
 
+    public int getImageCount() {
+        int numOfImages = 0;
+        ImageDAO imageDAO = new ImageDAO(factory.connect());
+        numOfImages = imageDAO.getImageCount();
+        factory.close();
+        return numOfImages;
+    }
+
     public String changeLike(int accountId, int imageId) {
         ImageAccountLikesDAO imageAccountLikesDAO = new ImageAccountLikesDAO(factory.connect());
         String result = imageAccountLikesDAO.changeLikeForImage(accountId, imageId);
@@ -48,6 +56,23 @@ public class ImageService {
     public List<Image> readAll(Account account) {
         ImageDAO imageDAO = new ImageDAO(factory.connect());
         List<Image> imageList = imageDAO.readAllImage();
+
+        if (account != null) {
+            String accountName = account.getFname() + " " + account.getLname();
+            for (Image img:imageList) {
+                if (img.getAccountName().equals(accountName)) {
+                    img.setDeleteFlag(true);
+                }
+            }
+        }
+
+        factory.close();
+        return imageList;
+    }
+
+    public List<Image> readAll(Account account, int from, int to) {
+        ImageDAO imageDAO = new ImageDAO(factory.connect());
+        List<Image> imageList = imageDAO.readAllImage(from, to);
 
         if (account != null) {
             String accountName = account.getFname() + " " + account.getLname();

@@ -60,6 +60,7 @@
                 <th>Email</th>
                 <th>Пароль</th>
                 <th>Тип</th>
+                <th>Удалить</th>
             </tr>
         </thead>
         <tbody>
@@ -71,25 +72,18 @@
                     <td>${account.email}</td>
                     <td>${account.password}</td>
                     <td>${account.accountType}</td>
+                    <td>
+                        <form action="${pageContext.request.contextPath}/accounts/delete" method="post">
+                                <c:if test="${account.fname ne sessionScope.get('account').fname
+                              and account.lname ne sessionScope.get('account').lname}">
+                                <button type="submit" name="idForDelete" value="${account.id}">Удалить</button>
+                                </c:if>
+                        </form>
+                    </td>
                 </tr>
             </c:forEach>
         </tbody>
     </table>
-    <div align="center">
-        <form action="${pageContext.request.contextPath}/accounts/delete" method="post">
-            <label for="selectid">Удалить профиль с ID: </label>
-            <select id="selectid" class="form-control" style="width: 80px; margin-bottom: 10px" name="idForDelete">
-                <c:forEach items="${accountList}" var="account">
-                    <c:if test="${account.fname ne sessionScope.get('account').fname
-                              and account.lname ne sessionScope.get('account').lname}">
-                        <option>${account.id}</option>
-                    </c:if>
-
-                </c:forEach>
-            </select>
-            <input type="submit" class="btn btn-primary" value="Delete user">
-        </form>
-    </div>
 </div>
 <hr>
 <div>
@@ -107,17 +101,19 @@
                                 <li class="list-group-item">Тeги: ${image.tags}</li>
                             </c:if>
                             <li class="list-group-item">
-                                <label class="likes">
-                                    Лайков:
-                                    <input type="hidden" value="${image.id}">
-                                    <span>${image.likes}</span>
-                                </label>
+                                Лайков: <span id="like-id-${image.id}">${image.likes}</span>
                             </li>
                             <li class="list-group-item">Дата создания: ${image.date}</li>
                             <li class="list-group-item">Добавил пользователь: ${image.accountName}</li>
                         </ul>
                         <div class="btn-group" role="group" aria-label="Basic example">
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#img${image.id}">View</button>
+
+                            <button onclick="changeLike(this)" class="btn btn-success">
+                                <input type="hidden" value="${image.id}">
+                                Like
+                            </button>
+
                             <c:if test="${image.deleteFlag == 'true' or sessionScope.get('account').accountType == 'administration'}">
                                 <form style="height: 75%;" action="/image/delete" method="post">
                                     <button class="btn btn-danger" type="submit" value="${image.id}" name="imageForDeleteId">Delete</button>
@@ -141,10 +137,63 @@
                 </div>
             </c:forEach>
         </div>
+    <div class="row justify-content-center" >
+        <ul class="pagination pagination-lg">
+            <c:forEach items="${linkList}" var="link">
+                <li class="page-item">
+                    <form action="/admin" method="get">
+                        <button type="submit" value="${link}" name="linkValue">${link}</button>
+                        <%--<a class="page-link" href="#">${link}</a>--%>
+                    </form>
+
+                </li>
+            </c:forEach>
+        </ul>
+    </div>
     </div>
 </div>
+<script>
+    function changeLike(value) {
+        var value = getInfoAboutImage(value);
+        changeTotalLike(value);
+    }
 
-<script  src="${pageContext.request.contextPath}/js/changeLike.js"></script>
+    function getInfoAboutImage(value) {
+        var child = value.children;
+
+        var result = {};
+
+        for (var i = 0; i < child.length; i++) {
+            var obj = child[i];
+
+            if (obj.tagName === 'INPUT') {
+                result.imageId = obj.value;
+            }
+        }
+
+        var spanId = document.getElementById('like-id-' + result.imageId);
+        result.spanTag = spanId;
+        return result;
+    }
+
+    function changeTotalLike(value) {
+        $.ajax({
+            type: 'POST',
+            url:  '/image/like',
+            data: {'imageId':value.imageId},
+            success: function (data) {
+                console.log(data);
+                var likes = Number(value.spanTag.innerHTML);
+                if (data === "added") {
+                    value.spanTag.innerHTML = likes + 1;
+                } else if (data === "deleted") {
+                    value.spanTag.innerHTML = likes - 1;
+                }
+            }
+        })
+    }
+</script>
+
 
 </body>
 </html>

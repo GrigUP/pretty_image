@@ -20,8 +20,11 @@ import java.util.List;
 @WebServlet(name = "IndexServlet", urlPatterns = "")
 public class IndexServlet extends HttpServlet {
 
+    private final Integer imageOnPage = 3;
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.getServletContext().setAttribute("imageOnPage", imageOnPage);
 
         Account sessionAccount = (Account) req.getSession().getAttribute("account");
         if (sessionAccount != null) {
@@ -50,6 +53,8 @@ public class IndexServlet extends HttpServlet {
             if (requestDispatcher != null) requestDispatcher.forward(req, resp);
 
             resetErrorMessage(req.getSession());
+
+
         }
     }
 

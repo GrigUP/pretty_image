@@ -64,13 +64,7 @@
                   <c:if test="${image.tags != ''}">
                     <li class="list-group-item">Тeги: ${image.tags}</li>
                   </c:if>
-                  <li class="list-group-item">
-                    <label class="likes">
-                      Лайков:
-                      <input type="hidden" value="${image.id}">
-                      <span>${image.likes}</span>
-                    </label>
-                  </li>
+                  <li class="list-group-item">Лайков: ${image.likes}</li>
                   <li class="list-group-item">Дата создания: ${image.date}</li>
                   <li class="list-group-item">Добавил пользователь: ${image.accountName}</li>
                 </ul>

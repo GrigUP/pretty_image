@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <meta charset="utf-8">
     <title>User page</title>
+
     <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <!-- Popper JS -->
@@ -103,7 +103,6 @@
     </div>
 </div>
 <script>
-
     function changeLike(value) {
         var value = getInfoAboutImage(value);
         changeTotalLike(value);
@@ -143,6 +142,10 @@
             }
         })
     }
+</script>
+
+<script>
+
 </script>
 </body>
 </html>

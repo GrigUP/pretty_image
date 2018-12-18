@@ -68,10 +68,40 @@ public class ImageDAO {
         return null;
     }
 
+    public int getImageCount() {
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(String.format("SELECT COUNT(*) as count FROM %s;", tableName))) {
+
+            if(resultSet.next()) {
+                return resultSet.getInt("count");
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return 0;
+    }
+
     public List<Image> readAllImage() {
         List<Image> imageList = new ArrayList<>();
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(String.format("SELECT * FROM %s;", tableName))) {
+
+            while(resultSet.next()) {
+                imageList.add(buildImageByResultSet(resultSet));
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return imageList;
+    }
+
+    public List<Image> readAllImage(int from, int to) {
+        List<Image> imageList = new ArrayList<>();
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(String.format("SELECT * FROM %s LIMIT %d, %d;", tableName, from, to))) {
 
             while(resultSet.next()) {
                 imageList.add(buildImageByResultSet(resultSet));
