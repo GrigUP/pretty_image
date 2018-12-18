@@ -19,7 +19,8 @@ import java.util.List;
 public class GetImageServlet extends HttpServlet {
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        System.out.println("getImage");
         Account account = (Account) req.getSession().getAttribute("account");
 
         if (account == null) {
@@ -29,13 +30,12 @@ public class GetImageServlet extends HttpServlet {
         }
 
         Integer imageOnPage = (Integer) req.getServletContext().getAttribute("imageOnPage");
-        System.out.println(imageOnPage);
-        Integer linkValue = Integer.parseInt(req.getParameter("linkValue"));
-        System.out.println(linkValue);
+        Integer linkValue = (Integer) req.getSession().getAttribute("LinkValueForImageServlet");
 
+        System.out.println(linkValue);
         DBFactory bd = new MysqlDBFactory();
         ImageService imageService = new ImageService(bd);
-        List<Image> imageList = imageService.readAll(account, (linkValue-1)*imageOnPage+1, imageOnPage);
+        List<Image> imageList = imageService.readAll(account, (linkValue-1)*imageOnPage, imageOnPage);
         bd.close();
 
         req.getSession().setAttribute("imageBatch", imageList);

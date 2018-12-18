@@ -60,7 +60,7 @@
                 <th>Email</th>
                 <th>Пароль</th>
                 <th>Тип</th>
-                <th>Удалить</th>
+                <th>Удалить пользователя</th>
             </tr>
         </thead>
         <tbody>
@@ -73,10 +73,10 @@
                     <td>${account.password}</td>
                     <td>${account.accountType}</td>
                     <td>
-                        <form action="${pageContext.request.contextPath}/accounts/delete" method="post">
+                        <form style="height: 75%;" action="${pageContext.request.contextPath}/accounts/delete" method="post">
                                 <c:if test="${account.fname ne sessionScope.get('account').fname
                               and account.lname ne sessionScope.get('account').lname}">
-                                <button type="submit" name="idForDelete" value="${account.id}">Удалить</button>
+                                <button class="btn btn-danger" type="submit" name="idForDelete" value="${account.id}">Удалить</button>
                                 </c:if>
                         </form>
                     </td>
@@ -137,19 +137,17 @@
                 </div>
             </c:forEach>
         </div>
-    <div class="row justify-content-center" >
-        <ul class="pagination pagination-lg">
-            <c:forEach items="${linkList}" var="link">
-                <li class="page-item">
-                    <form action="/admin" method="get">
-                        <button type="submit" value="${link}" name="linkValue">${link}</button>
-                        <%--<a class="page-link" href="#">${link}</a>--%>
-                    </form>
-
-                </li>
-            </c:forEach>
-        </ul>
-    </div>
+        <div class="row justify-content-center" >
+            <ul class="pagination pagination-lg">
+                <c:forEach items="${linkList}" var="link">
+                    <li class="page-item">
+                        <form action="/admin" method="get">
+                            <button class="page-link" type="submit" value="${link}" name="linkValue">${link}</button>
+                        </form>
+                    </li>
+                </c:forEach>
+            </ul>
+        </div>
     </div>
 </div>
 <script>

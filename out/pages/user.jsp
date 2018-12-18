@@ -100,6 +100,17 @@
                 </div>
             </c:forEach>
         </div>
+        <div class="row justify-content-center" >
+            <ul class="pagination pagination-lg">
+                <c:forEach items="${linkList}" var="link">
+                    <li class="page-item">
+                        <form action="/admin" method="get">
+                            <button class="page-link" type="submit" value="${link}" name="linkValue">${link}</button>
+                        </form>
+                    </li>
+                </c:forEach>
+            </ul>
+        </div>
     </div>
 </div>
 <script>
