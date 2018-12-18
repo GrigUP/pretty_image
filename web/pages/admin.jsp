@@ -73,12 +73,12 @@
                     <td>${account.password}</td>
                     <td>${account.accountType}</td>
                     <td>
-                        <form style="height: 75%;" action="${pageContext.request.contextPath}/accounts/delete" method="post">
-                                <c:if test="${account.fname ne sessionScope.get('account').fname
+                        <c:if test="${account.fname ne sessionScope.get('account').fname
                               and account.lname ne sessionScope.get('account').lname}">
+                            <form style="height: 20px" style="height: 75%;" action="${pageContext.request.contextPath}/accounts/delete" method="post">
                                 <button class="btn btn-danger" type="submit" name="idForDelete" value="${account.id}">Удалить</button>
-                                </c:if>
-                        </form>
+                            </form>
+                        </c:if>
                     </td>
                 </tr>
             </c:forEach>

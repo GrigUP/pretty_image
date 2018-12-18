@@ -42,9 +42,7 @@ public class IndexServlet extends HttpServlet {
             DBFactory bd = new MysqlDBFactory();
             ImageService imageService = new ImageService(bd);
 
-            AccountsDAO accountsDAO = new AccountsDAO(bd.connect());
-            List<Account> accountList = accountsDAO.readAllAccount();
-            List<Image> imageList = imageService.readAll();
+            List<Image> imageList = imageService.readAll(null, 0,9);
             bd.close();
 
             req.setAttribute("imagesList", imageList);

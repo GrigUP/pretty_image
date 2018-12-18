@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 @WebServlet(name = "SignupServlet", urlPatterns = "/signup")
 public class SignupServlet extends HttpServlet {
@@ -38,8 +39,8 @@ public class SignupServlet extends HttpServlet {
         Account account = dao.readAccount(req.getParameter("email").toLowerCase());
         if (account == null) {
             account = new Account();
-            account.setFname(req.getParameter("fname"));
-            account.setLname(req.getParameter("lname"));
+            account.setFname(new String(req.getParameter("fname").getBytes(StandardCharsets.ISO_8859_1), "UTF-8"));
+            account.setLname(new String(req.getParameter("lname").getBytes(StandardCharsets.ISO_8859_1), "UTF-8"));
             account.setEmail(req.getParameter("email").toLowerCase());
             account.setPassword(req.getParameter("password"));
             account.setAccountType(defaultType);
