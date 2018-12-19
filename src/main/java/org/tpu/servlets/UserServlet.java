@@ -23,7 +23,6 @@ import java.util.List;
 public class UserServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("userServlet");
         Account account = (Account) req.getSession().getAttribute("account");
         String linkValueStr = req.getParameter("linkValue");
         Integer linkValue = linkValueStr != null ? Integer.parseInt(linkValueStr) : 1;

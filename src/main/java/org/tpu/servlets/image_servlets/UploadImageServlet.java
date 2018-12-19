@@ -9,6 +9,7 @@ import org.tpu.database.models.Account;
 import org.tpu.database.models.Image;
 import org.tpu.services.ImageMeta;
 import org.tpu.services.ImageService;
+import org.tpu.services.Logger;
 import org.tpu.services.Service;
 
 import javax.servlet.ServletException;
@@ -24,6 +25,8 @@ import java.util.List;
 @WebServlet(name = "UploadImageServlet", urlPatterns = "/image/upload")
 public class UploadImageServlet extends HttpServlet {
 
+    private final Logger logger = new Logger();
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.sendRedirect(req.getContextPath() + "/");
@@ -33,12 +36,12 @@ public class UploadImageServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String errorMsgWhenUpload = null;
 
-        Account sessionAccount = (Account) req.getSession().getAttribute("account");
-        if (sessionAccount == null) {
+        Account account = (Account) req.getSession().getAttribute("account");
+        if (account == null) {
             resp.sendRedirect(req.getContextPath() + "/");
         }
 
-        String accountName = sessionAccount.getFname() + " " + sessionAccount.getLname();
+        String accountName = account.getFname() + " " + account.getLname();
         String imageRoot =  "C:/Users/я/Documents/pretty_image/out/upload/";
         String imageWebRoot = "/upload/";
 
@@ -57,9 +60,10 @@ public class UploadImageServlet extends HttpServlet {
             return;
         }
         image.setAccountName(accountName);
-        System.out.println(image);
-        imageService.createOnDB(image);
 
+        imageService.createOnDB(image);
+        Image uploadedImage = imageService.readAll(null, imageService.getImageCount()-1, 1).get(0);
+        logger.writeToLogFile(String.format("%s %s upload image with id %d", account.getFname(), account.getLname(), uploadedImage.getId()));
         resp.sendRedirect(req.getContextPath() + "/");
     }
 

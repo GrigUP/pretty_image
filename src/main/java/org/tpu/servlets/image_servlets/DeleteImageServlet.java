@@ -4,6 +4,7 @@ import org.tpu.database.implementations.MysqlDBFactory;
 import org.tpu.database.interfaces.DBFactory;
 import org.tpu.database.models.Account;
 import org.tpu.services.ImageService;
+import org.tpu.services.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,6 +16,8 @@ import java.io.IOException;
 @WebServlet(name = "DeleteImageServlet", urlPatterns = "/image/delete")
 public class DeleteImageServlet extends HttpServlet {
 
+    private final Logger logger = new Logger();
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.sendRedirect(req.getContextPath() + "/");
@@ -22,8 +25,8 @@ public class DeleteImageServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Account sessionAccount = (Account) req.getSession().getAttribute("account");
-        if (sessionAccount == null) {
+        Account account = (Account) req.getSession().getAttribute("account");
+        if (account == null) {
             resp.sendRedirect(req.getContextPath() + "/");
             return;
         }
@@ -34,6 +37,7 @@ public class DeleteImageServlet extends HttpServlet {
         imageService.deleteById(imageId);
         dbFactory.close();
 
+        logger.writeToLogFile(String.format("%s %s delete image with id %d", account.getFname(), account.getLname(), imageId));
         resp.sendRedirect(req.getContextPath() + "/");
     }
 }

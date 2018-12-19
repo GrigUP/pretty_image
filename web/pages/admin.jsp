@@ -3,7 +3,6 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Admin page</title>
     <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
     <!--<link href="C:\Users\я\Documents\pretty_image\web\css\style.css" rel="stylesheet" type="text/css">-->
     <meta charset="utf-8">
@@ -17,13 +16,15 @@
     <link href='https://fonts.googleapis.com/css?family=Titillium+Web:400,300,600' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
     <script src="/js/inputFile.js" ></script>
+    <title>Admin page</title>
 </head>
 <body style="height: 10px; background: linear-gradient(45deg, #ddc8ee, #C5DDE8);">
 <%@include file="navbar.html"%>
 <div class="container" align="center">
-    <div class="col col-md-6" align="center">
+    <div class="col col-md-7" align="center">
         <!-- <div align="center" style="margin-bottom: 20px; margin-top: 10px"> -->
         <h3 style="margin-top: 10px">Загрузить изображениe</h3>
+        <h6 style="margin-top: 5px; margin-bottom: 10px">Размер изображения должен быть не больше 2 Мб, а формат - PNG или JPEG</h6>
         <form action="${pageContext.request.contextPath}/image/upload" method="post" enctype="multipart/form-data">
             <div class="form-group">
                 <div class="input-group input-file">
@@ -33,7 +34,7 @@
                     </span>
                 </div>
             </div>
-            <input placeholder="Enter some tags" style="width: 525px; margin-bottom: 15px" class="form-control" id="tags" type="text" name="tags">
+            <input placeholder="Enter some tags" style="margin-bottom: 15px" class="form-control" id="tags" type="text" name="tags">
             <div class="form-group">
                 <button type="submit" class="btn btn-primary pull-right">Submit</button>
                 <button type="reset" class="btn btn-danger">Reset</button>
@@ -47,12 +48,13 @@
     </div>
 </div>
 <hr>
-<div >
+<div class="container">
     <div align="center" style="margin-bottom: 20px">
         <h3>Зарегестрированные пользователи</h3>
     </div>
-    <table class="table table-light table-bordered table-hover">
-        <thead class="table-info">
+    <div style="overflow: auto; height: 220px">
+        <table class="table table-light table-bordered table-hover">
+            <thead class="table-info">
             <tr >
                 <th>ID</th>
                 <th>Имя</th>
@@ -62,8 +64,8 @@
                 <th>Тип</th>
                 <th>Удалить пользователя</th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             <c:forEach items="${accountList}" var="account">
                 <tr>
                     <td>${account.id}</td>
@@ -82,8 +84,13 @@
                     </td>
                 </tr>
             </c:forEach>
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
+</div>
+<hr>
+<div align="center" style="margin-bottom: 20px">
+    <h3><a href="/upload/log.txt">Посмотреть лог-файл</a></h3>
 </div>
 <hr>
 <div>

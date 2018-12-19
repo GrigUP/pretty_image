@@ -16,6 +16,7 @@ public class ImageService {
     private DBFactory factory;
     private Random random;
     private final int maxImageSize = 2 * 1024 * 1024;
+    private final String[] correctExt = new String[]{"jpeg", "png"};
 
     public ImageService(DBFactory factory) {
         this.factory = factory;
@@ -112,7 +113,6 @@ public class ImageService {
              */
         }
 
-        System.out.println(imageMeta);
         String imageRoot = imageMeta.getRoot();
         String imageWebRoot = imageMeta.getWebRoot();
         List<FileItem> items = imageMeta.getFileItems();
@@ -129,9 +129,7 @@ public class ImageService {
         String localPath = image.getLocalPath();
         File file = new File(localPath);
         if (file.exists()) {
-            System.out.println("File exists");
             if (file.delete()) {
-                System.out.println("deleted");
             }
         }
     }
@@ -142,7 +140,6 @@ public class ImageService {
     }
 
     private String getFileNameByPath(String path) {
-        System.out.println(path.substring(path.lastIndexOf("/") + 1 ));
         return path.substring(path.lastIndexOf("/")+1);
     }
 
@@ -161,6 +158,18 @@ public class ImageService {
                     if (path == null) {
                         return null;
                     }
+
+                    boolean isCorrectFile = false;
+                    String fileExtType = fileItem.getContentType();
+                    for(String ext:correctExt) {
+                        if(fileExtType.contains(ext)) {
+                            isCorrectFile = true;
+                        }
+                    }
+                    if (!isCorrectFile) {
+                        throw new Exception("Incorrect image type!");
+                    }
+
                     resultImage.setLocalPath(path);
                     break;
                 case("tags"):
@@ -185,7 +194,7 @@ public class ImageService {
                 item.write(uploadedFile);
                 return path;
             } else {
-                System.out.println("cant create");
+
             }
 
         }

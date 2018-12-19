@@ -20,11 +20,9 @@ public class GetImageServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("getImage");
         Account account = (Account) req.getSession().getAttribute("account");
 
         if (account == null) {
-            System.out.println("null");
             resp.sendRedirect(req.getContextPath() + "/");
             return;
         }
@@ -32,7 +30,6 @@ public class GetImageServlet extends HttpServlet {
         Integer imageOnPage = (Integer) req.getServletContext().getAttribute("imageOnPage");
         Integer linkValue = (Integer) req.getSession().getAttribute("LinkValueForImageServlet");
 
-        System.out.println(linkValue);
         DBFactory bd = new MysqlDBFactory();
         ImageService imageService = new ImageService(bd);
         List<Image> imageList = imageService.readAll(account, (linkValue-1)*imageOnPage, imageOnPage);

@@ -5,6 +5,7 @@ import org.tpu.database.implementations.MysqlDBFactory;
 import org.tpu.database.interfaces.DBFactory;
 import org.tpu.database.models.Account;
 import org.tpu.database.models.AccountType;
+import org.tpu.services.Logger;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -18,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 @WebServlet(name = "SignupServlet", urlPatterns = "/signup")
 public class SignupServlet extends HttpServlet {
 
+    private final Logger logger = new Logger();
     private final String errorMessage = "Аккаунт существует";
     private final AccountType defaultType = AccountType.user;
 
@@ -46,6 +48,7 @@ public class SignupServlet extends HttpServlet {
             account.setAccountType(defaultType);
 
             dao.createAccount(account);
+            logger.writeToLogFile(String.format("%s %s is signed up", account.getFname(), account.getLname()));
 
             account = dao.readAccount(req.getParameter("email").toLowerCase());
             db.close();

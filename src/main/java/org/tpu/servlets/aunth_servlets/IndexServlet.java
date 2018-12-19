@@ -32,9 +32,6 @@ public class IndexServlet extends HttpServlet {
                 case user:
                     resp.sendRedirect(req.getContextPath() + "/user");
                     break;
-                case moderator:
-                    resp.sendRedirect(req.getContextPath() + "/admin");
-                    break;
                 case administration:
                     resp.sendRedirect(req.getContextPath() + "/admin");
             }
